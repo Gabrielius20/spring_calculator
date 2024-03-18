@@ -11,28 +11,35 @@
 	<groupId>com.spring</groupId>
 	<artifactId>calculator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- Package(Archive) where are all app packets exist. "War" is used to put everything to TomCat server -->
 	<packaging>war</packaging>
 	<name>calculator</name>
 	<description>Web calculator</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
+
 	<dependencies>
+		<!-- Used for Spring Boot web applications -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<!-- Tom cat server for launching web application -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- For JUnit tests -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
