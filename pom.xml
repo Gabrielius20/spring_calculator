@@ -20,18 +20,13 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<!-- Skirta Sping boot aplikacijoms -->
+		<!-- Skirta Spring boot aplikacijoms -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Tomcat serveris aplikacijos paleidimui. -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
+
 
 		<!-- Biblioteka skirta testams -->
 		<dependency>

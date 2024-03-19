@@ -18,8 +18,8 @@ public class CalculatorApplication {
 		SpringApplication.run(CalculatorApplication.class, args);
 		System.out.println("Hello, Spring boot");
 	}
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return String.format("Hello %s!", name);
-	}
+//	@GetMapping("/hello")
+//	public String hello(@RequestParam(value = "name", defaultValue = "World of Spring boot") String name) {
+//		return String.format("Hello %s!", name);
+//	}
 }
