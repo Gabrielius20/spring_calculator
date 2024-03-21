@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<!-- Package(Archive) where are all app packets exist. "War" is used to put everything to TomCat server -->
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>calculator</name>
 	<description>Web calculator</description>
 	<properties>
@@ -22,17 +22,11 @@
 
 
 	<dependencies>
-		<!-- Used for Spring Boot web applications -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- Tom cat server for launching web application -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
+
 		<!-- For JUnit tests -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -40,6 +34,20 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
