@@ -3,6 +3,7 @@ package com.spring.calculator;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,12 +30,18 @@ public class CalculatorController {
         // Grąžiname JSP failą, turi būti talpinami 'webapp -> WEB-INF -> jsp' aplanke
         return "calculator";
     }
-    // kadangi skaiciuotuvo fomra naudoja POST metoda, cia irgi nurodome POST.
-    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
+    // kadangi skaiciuotuvo forma naudoja POST metoda, cia irgi nurodome POST.
+//    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
+    // trumpesnis POST variantas
+    @PostMapping("/calculate")
+    // naudotis @RequestParam reikia kai raktai skiriasi nuo frontend ir backend
         String calculate(@RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
         int num1 = Integer.parseInt(numbers.get("num1"));
         int num2 = Integer.parseInt(numbers.get("num2"));
         String operation = numbers.get("operation");
+
+        System.out.println("Results: " + numbers.entrySet());
+//    String calculate(int num1, int num2, String operation, ModelMap modelMap) {
         double result = 0;
         String error = "";
 
@@ -57,6 +64,7 @@ public class CalculatorController {
         modelMap.put("result", result);
         modelMap.put("error", error);
 
+        // prefix + pavadinimas jsp failo + suffix
         return "calculate";
     }
 }
