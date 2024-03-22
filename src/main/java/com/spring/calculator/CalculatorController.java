@@ -1,12 +1,11 @@
 package com.spring.calculator;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 import java.util.HashMap;
 
@@ -25,19 +24,30 @@ public class CalculatorController {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String index() {
         // Return the jsp file must be in webapp -> WEB-INF -> jsp
-        return "calculator.jsp";
+        return "calculator";
     }
 
 
     // Because the calculator form uses POST method we need to use POST here as well
-    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
+
+    /*@RequestMapping(method = RequestMethod.POST, value = "/calculate")*/
+    @PostMapping("/calculate")
+    // You can do it with @RequestParam
     public String calculate(@RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
         int num1 = Integer.parseInt(numbers.get("num1"));
         int num2 = Integer.parseInt(numbers.get("num2"));
         String symbol = numbers.get("symbol");
+        System.out.println(numbers.entrySet());
+
+        // Or you can do it without if the values of frontend and backend are the same
+
+        /*public String calculate(int num1, int num2, String symbol, ModelMap modelMap) {*/
+        /*int num1 = Integer.parseInt(numbers.get("num1"));
+        int num2 = Integer.parseInt(numbers.get("num2"));*/
+
+
         int result = 0;
 
-        // Perform calculation based on the selected symbol
         switch (symbol) {
             case "+" -> result = num1 + num2;
             case "-" -> result = num1 - num2;
@@ -49,11 +59,12 @@ public class CalculatorController {
                 } else {
                     // Handle division by zero error
                     modelMap.put("error", "Can't divide by zero");
-                    return "calculator.jsp";
+                    // Prefix + file name + suffix
+                    return "calculator";
                 }
             }
             default -> {
-                return "calculator.jsp";
+                return "calculator";
             }
         }
 
@@ -63,7 +74,7 @@ public class CalculatorController {
         modelMap.put("symbol", symbol);
         modelMap.put("result", result);
 
-        return "calculate.jsp";
+        return "calculate";
     }
 
 }
