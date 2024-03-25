@@ -1,12 +1,11 @@
 package com.spring.calculator;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -26,7 +25,9 @@ public class CalculatorController {
     // Marsrutizavimo informacija. šiuo atveju, ji nurodo Spring karkasui,
     // jog visas HTTP užklausas, kurių kelias yra "/" apdoros metodas home().
     @RequestMapping(method = RequestMethod.GET, value = "/")
-    public String home() {
+    public String home(Model model) {
+        // Jeigu model "number" nepraeina validacijos - per ji grazinamos validacijos klaidos į vaizda (view).
+        model.addAttribute("number", new Number());
         // Grąžiname JSP failą, turi būti talpinami 'webapp -> WEB-INF -> jsp' aplanke
         return "calculator";
     }
@@ -35,36 +36,37 @@ public class CalculatorController {
     // trumpesnis POST variantas
     @PostMapping("/calculate")
     // naudotis @RequestParam reikia kai raktai skiriasi nuo frontend ir backend
-        String calculate(@RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
-        int num1 = Integer.parseInt(numbers.get("num1"));
-        int num2 = Integer.parseInt(numbers.get("num2"));
-        String operation = numbers.get("operation");
+        String calculate(@Valid @ModelAttribute("number") Number e, BindingResult br,
+                         @RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
+        if(br.hasErrors()) {
+            return "calculator";
+        } else {
 
-        System.out.println("Results: " + numbers.entrySet());
+            int num1 = Integer.parseInt(numbers.get("num1"));
+            int num2 = Integer.parseInt(numbers.get("num2"));
+            String operation = numbers.get("operation");
+
+            System.out.println("Results: " + numbers.entrySet());
 //    String calculate(int num1, int num2, String operation, ModelMap modelMap) {
-        double result = 0;
-        String error = "";
+            int result = 0;
 
-        if(operation.equals("+")) {
-            result = num1 + num2;
-        } else if(operation.equals("-")) {
-            result = num1 - num2;
-        } else if(operation.equals("*")) {
-            result = num1 * num2;
-        } else if(operation.equals("/")) {
-            if (num2 == 0) {
-                error = "Error! The number can not be divided by 0.";
-            } else
-                result = (double) num1 / num2;
+            if (operation.equals("+")) {
+                result = num1 + num2;
+            } else if (operation.equals("-")) {
+                result = num1 - num2;
+            } else if (operation.equals("*")) {
+                result = num1 * num2;
+            } else if (operation.equals("/")) {
+                result = num1 / num2;
+            }
+            // ModelMap objektas naudojamas siųsti reikšmes iš Spring MVC controller į JSP
+            modelMap.put("num1", num1);
+            modelMap.put("num2", num2);
+            modelMap.put("operation", operation);
+            modelMap.put("result", result);
+
+            // prefix + pavadinimas jsp failo + suffix
+            return "calculate";
         }
-        // ModelMap objektas naudojamas siųsti reikšmes iš Spring MVC controller į JSP
-        modelMap.put("num1", num1);
-        modelMap.put("num2", num2);
-        modelMap.put("operation", operation);
-        modelMap.put("result", result);
-        modelMap.put("error", error);
-
-        // prefix + pavadinimas jsp failo + suffix
-        return "calculate";
     }
 }

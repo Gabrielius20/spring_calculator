@@ -4,17 +4,6 @@
         <title>Skaičiuoti</title>
     </head>
     <body>
-        <%
-            String error = (String) request.getAttribute("error");
-            if (error == null || error.isEmpty()) {
-        %>
-                <h2>${num1} ${operation} ${num2} = ${result}</h2>
-        <%
-            } else {
-        %>
-                <h2><%= error %></h2>
-        <%
-            }
-        %>
+        <h2>${num1} ${operation} ${num2} = ${result}</h2>
     </body>
 </html>
