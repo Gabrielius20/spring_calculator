@@ -8,6 +8,8 @@ import java.util.List;
 
 public class NumberDAOImpl implements NumberDAO {
     public void insertEntity(Number number) {
+        // EntityManager suteikia metodus objektams kurti, skaityti, trynti ir atnaujinti, bei leidžia pateikti užklausas duomenų bazėms.
+        // EntityManager nėra apsaugota nuo gijų, tai reiškia, kad kiekviena gija turi naudoti savo „EntityManager“ instanciją.
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         entityTransaction.begin();
