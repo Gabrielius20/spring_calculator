@@ -1,13 +1,24 @@
-package com.spring.calculator;
+package com.spring.calculator.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
+@Entity
+@Table(name = "numbers")
 public class Number {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
     @Min(value=0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
+    @Column(name = "num1")
     private int num1;
     @Min(value=0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
+    @Column(name = "num2")
     private int num2;
+    @Column(name = "operation")
     private String operation;
+    @Column(name = "result")
     private int result;
 
     public Number(int num1, int num2, String operation, int result) {
@@ -17,6 +28,19 @@ public class Number {
         this.result = result;
     }
     public Number() {}
+
+    public Number(int id, int num1, int num2, String operation, int result) {
+        this.id = id;
+        this.num1 = num1;
+        this.num2 = num2;
+        this.operation = operation;
+        this.result = result;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public int getNum1() {
         return num1;
     }
@@ -52,7 +76,8 @@ public class Number {
     @Override
     public String toString() {
         return "Number{" +
-                "num1=" + num1 +
+                "id=" + id +
+                ", num1=" + num1 +
                 ", num2=" + num2 +
                 ", operation='" + operation + '\'' +
                 ", result=" + result +

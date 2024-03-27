@@ -1,6 +1,11 @@
-package com.spring.calculator;
+package com.spring.calculator.controller;
 
+import com.spring.calculator.model.Number;
+import com.spring.calculator.service.NumberService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -16,12 +21,21 @@ import java.util.HashMap;
 //@RestController nergrazina view
 //Kadangi mums reikia grąžinti view pagal Spring MVC, naudojame @Controller
 @Controller
-// Zymi konfiguracijos komponenta viduje leidzia kurti bean per metodus su @Bean anotacija.
+// @EnableAutoConfiguration - zymi konfiguracijos komponenta viduje leidzia kurti bean per metodus su @Bean anotacija.
 // Si klases lygio anotacija nurodo spring karkasui "Atspeti" konfiguracija.
 // Rementis priklausomybemis ( Jar bibliotekomis ) kurios programuotojas itraukia i projekta ( Pom.xml
 // Siuo atveju ji veikia kartu su main metodu.
-//@EnableAutoConfiguration
+@EnableAutoConfiguration
 public class CalculatorController {
+    // @Autowired - naudojamas automatinei priklausomybių injekcijai,
+    // kad panaudoti @Autowired anotaciją, reikia pirmiausiai turėti apsirašius @Bean @Configuration klasėje.
+    @Autowired
+    //@Qualifier anotacija kartu su @Autowired patikslina su kuriuo konkrečiai bean susieti priklausomybę.
+    // Jeigu @Configuration klasėje yra daugiau negu vienas Bean, @Qualifier anotacija yra privaloma,
+    // kitu atveju metama klaida.
+    @Qualifier("NumberService")
+    public NumberService numberService;
+
     // Marsrutizavimo informacija. šiuo atveju, ji nurodo Spring karkasui,
     // jog visas HTTP užklausas, kurių kelias yra "/" apdoros metodas home().
     @RequestMapping(method = RequestMethod.GET, value = "/")
@@ -33,6 +47,8 @@ public class CalculatorController {
     }
     // kadangi skaiciuotuvo forma naudoja POST metoda, cia irgi nurodome POST.
 //    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
+    // SVARBU: parametras BindingResult turi eiti iskart po anotacijos @Valid
+    // kitu atveju bus "Validation failed for object"
     // trumpesnis POST variantas
     @PostMapping("/calculate")
     // naudotis @RequestParam reikia kai raktai skiriasi nuo frontend ir backend
@@ -64,6 +80,9 @@ public class CalculatorController {
             modelMap.put("num2", num2);
             modelMap.put("operation", operation);
             modelMap.put("result", result);
+
+            // Kreipiames į service, kuris savo ruožtu kreipiasi į DAO ir išsaugo įrašą DB
+            numberService.save(new Number(num1, num2, operation, result));
 
             // prefix + pavadinimas jsp failo + suffix
             return "calculate";
