@@ -24,23 +24,21 @@ public class NumberDAOImpl implements NumberDAO {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
 
-        List<Number> numbers = entityManager.
-                createQuery("SELECT n FROM Number n WHERE n.id = :id")
+        Number numbers = entityManager.createQuery("SELECT n FROM Number n WHERE n.id = :id", Number.class)
                 .setParameter("id", id)
-                .getResultList();
+                .getSingleResult();
 
         entityManager.getTransaction().commit();
         entityManager.close();
 
-        return numbers.get(0);
+        return numbers;
     }
 
     public List<Number> findEntities() {
         EntityManager entityManager = JPAUtil.getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();
 
-        List<Number> numbers = entityManager.
-                createQuery("SELECT n FROM Number n")
+        List<Number> numbers = entityManager.createQuery("SELECT n FROM Number n", Number.class)
                 .getResultList();
 
         entityManager.getTransaction().commit();

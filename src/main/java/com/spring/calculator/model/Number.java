@@ -10,14 +10,18 @@ public class Number {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Min(value=0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
+
+    @Min(value = 0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
     @Column(name = "num1")
     private int num1;
-    @Min(value=0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
+
+    @Min(value = 0, message = "Validacijos klaida: skaičius negali būti neigiamas.")
     @Column(name = "num2")
     private int num2;
+
     @Column(name = "operation")
     private String operation;
+
     @Column(name = "result")
     private int result;
 
@@ -27,7 +31,9 @@ public class Number {
         this.operation = operation;
         this.result = result;
     }
-    public Number() {}
+
+    public Number() {
+    }
 
     public Number(int id, int num1, int num2, String operation, int result) {
         this.id = id;
@@ -35,6 +41,11 @@ public class Number {
         this.num2 = num2;
         this.operation = operation;
         this.result = result;
+    }
+
+    // Used to link the model to frontend
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

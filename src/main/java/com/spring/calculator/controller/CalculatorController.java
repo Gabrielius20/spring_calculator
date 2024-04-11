@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
 
@@ -29,6 +30,7 @@ import java.util.HashMap;
 public class CalculatorController {
     // @Autowired - naudojamas automatinei priklausomybių injekcijai,
     // kad panaudoti @Autowired anotaciją, reikia pirmiausiai turėti apsirašius @Bean @Configuration klasėje.
+    // tada naudojam beanus
     @Autowired
     //@Qualifier anotacija kartu su @Autowired patikslina su kuriuo konkrečiai bean susieti priklausomybę.
     // Jeigu @Configuration klasėje yra daugiau negu vienas Bean, @Qualifier anotacija yra privaloma,
@@ -45,6 +47,7 @@ public class CalculatorController {
         // Grąžiname JSP failą, turi būti talpinami 'webapp -> WEB-INF -> jsp' aplanke
         return "calculator";
     }
+
     // kadangi skaiciuotuvo forma naudoja POST metoda, cia irgi nurodome POST.
 //    @RequestMapping(method = RequestMethod.POST, value = "/calculate")
     // SVARBU: parametras BindingResult turi eiti iskart po anotacijos @Valid
@@ -52,9 +55,9 @@ public class CalculatorController {
     // trumpesnis POST variantas
     @PostMapping("/calculate")
     // naudotis @RequestParam reikia kai raktai skiriasi nuo frontend ir backend
-        String calculate(@Valid @ModelAttribute("number") Number e, BindingResult br,
-                         @RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
-        if(br.hasErrors()) {
+    String calculate(@Valid @ModelAttribute("number") Number e, BindingResult br,
+                     @RequestParam HashMap<String, String> numbers, ModelMap modelMap) {
+        if (br.hasErrors()) {
             return "calculator";
         } else {
 
@@ -64,17 +67,14 @@ public class CalculatorController {
 
             System.out.println("Results: " + numbers.entrySet());
 //    String calculate(int num1, int num2, String operation, ModelMap modelMap) {
-            int result = 0;
+            int result = switch (operation) {
+                case "+" -> num1 + num2;
+                case "-" -> num1 - num2;
+                case "*" -> num1 * num2;
+                case "/" -> num1 / num2;
+                default -> 0;
+            };
 
-            if (operation.equals("+")) {
-                result = num1 + num2;
-            } else if (operation.equals("-")) {
-                result = num1 - num2;
-            } else if (operation.equals("*")) {
-                result = num1 * num2;
-            } else if (operation.equals("/")) {
-                result = num1 / num2;
-            }
             // ModelMap objektas naudojamas siųsti reikšmes iš Spring MVC controller į JSP
             modelMap.put("num1", num1);
             modelMap.put("num2", num2);
@@ -88,4 +88,36 @@ public class CalculatorController {
             return "calculate";
         }
     }
+
+    @GetMapping(value = "/numbers")
+    public String getAllNumbers(Model model) {
+        model.addAttribute("numbers", numberService.getAll());
+        return "numbers";
+    }
+
+    @GetMapping(value = "/show{id}")
+    public String getById(int id, Model model) {
+        model.addAttribute("number", numberService.getById(id));
+        return "number";
+    }
+
+    @GetMapping(value = "/delete{id}")
+    public String delete(int id, Model model) {
+        numberService.delete(id);
+        model.addAttribute("number", numberService.getAll());
+        return "numbers";
+    }
+
+    @GetMapping(value = "/numberUpdate{id}")
+    public String update(int id, Model model) {
+        model.addAttribute("number", numberService.getById(id));
+        return "numberUpdate";
+    }
+
+    @PostMapping(value = "/updateNumber")
+    public String updateNumber(@ModelAttribute("number") Number num) {
+        numberService.update(num);
+        return "redirect:/show?id=" + num.getId();
+    }
+
 }

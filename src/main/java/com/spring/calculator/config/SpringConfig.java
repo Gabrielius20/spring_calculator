@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 //@Configuration - žymi konfiguracijos komponentą
 // viduje leidžia kurti bean per metodus su @Bean
 @Configuration
+// Pradedami rasyti programa pradedam nuo visu visu bean apsirasymu.
 
 public class SpringConfig {
 
@@ -25,6 +26,7 @@ public class SpringConfig {
     // kitu atveju metama klaida:
     //"Consider making one of the beans as @Primary, updating the consumer to accept multiple beans,
     // or using @Qualifier to identify the bean that should be consumed"
+    // Jeigu norim naudoti butent si bean tai turim naudoti qualifier ir controller claseje
     @Qualifier("NumberDAO")
     public NumberDAO getNumberDAO() {
         return new NumberDAOImpl();
